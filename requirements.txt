@@ -1,0 +1,40 @@
+# for data science
+numpy
+pandas
+sklearn
+scipy
+sympy
+tqdm
+matplotlib
+seaborn
+
+
+# for sqa
+pudb
+pylint
+flake8
+black
+coverage
+pytest
+pytest-flake8
+pytest-cov
+pytest-xdist
+pytest-html
+docutils==0.15
+Sphinx
+
+# other tools
+notebook
+python-dotenv
+jq
+click
+awscli
+
+# for ds project
+holidays==0.9.8
+fbprophet==0.5
+plotly
+statsmodels
+torch
+torchvision
+torchtext
