@@ -1,17 +1,12 @@
-default: run
+default: up
 
-all: data run
-
-data: convert
-
-convert: up
-	docker-compose exec app python convert.py
+all: run
 
 run: up
-	docker-compose exec app python main.py
+	docker-compose exec app python enc.py
 
 debug: up
-	docker-compose exec app pudb3 main.py
+	docker-compose exec app pudb3 enc.py
 
 up:
 	docker-compose up -d
@@ -31,5 +26,4 @@ reup: down up
 
 clean:
 	docker-compose down --rmi all
-	rm -f app/utils.py
 	sudo rm -rf app/__pycache__

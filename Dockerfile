@@ -1,13 +1,23 @@
-FROM python:3.6
+FROM nvidia/cuda
 
 MAINTAINER tkosht <takehito.oshita.business@gmail.com>
 
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y sudo vim tmux \
-        tzdata locales dialog git \
+    && apt-get install -y sudo build-essential autoconf jq \
+        vim tmux tzdata locales dialog git \
     && localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+
+RUN apt-get install -y --no-install-recommends \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel
+
+RUN ln -s /usr/bin/python3 /usr/bin/python \
+    && ln -s /usr/bin/pip3 /usr/bin/pip \
+    && ln -s /usr/bin/pdb3 /usr/bin/pdb
 
 ENV LANG="ja_JP.UTF-8" \
     LANGUAGE="ja_JP:ja" \
@@ -23,7 +33,8 @@ RUN apt-get upgrade -y \
 
 COPY ./requirements.txt /requirements.txt
 RUN pip install --upgrade pip \
-    && pip install -r /requirements.txt
+    && pip install -r /requirements.txt \
+    && rm -f /requirements.txt
 
 ARG user_id=1000
 ARG group_id=1000

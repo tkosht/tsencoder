@@ -7,6 +7,7 @@ sympy
 tqdm
 matplotlib
 seaborn
+plotly
 
 
 # for sqa
@@ -26,15 +27,9 @@ Sphinx
 # other tools
 notebook
 python-dotenv
-jq
-click
-awscli
 
 # for ds project
-holidays==0.9.8
-fbprophet==0.5
-plotly
-statsmodels
 torch
 torchvision
 torchtext
+pyro-ppl
