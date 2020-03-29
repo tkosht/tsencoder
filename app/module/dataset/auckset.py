@@ -27,6 +27,10 @@ class DatasetCyclicAuckland(TimeSeriesDataset):
     def df(self) -> pandas.DataFrame:
         return self.data_df
 
+    @property
+    def data_coumns(self) -> list:
+        return [col for col in self.df.columns if col != "ds"]
+
     def split(self, predict_date: str) -> (pandas.DataFrame, pandas.DataFrame):
         train_df = self.data_df[:predict_date].iloc[:-1]
         test_df = self.data_df[predict_date:]
@@ -36,4 +40,6 @@ class DatasetCyclicAuckland(TimeSeriesDataset):
         assert "y" in train_df.columns
         assert "ds" in test_df.columns
         assert "y" in test_df.columns
+        self.train_df = train_df
+        self.test_df = test_df
         return train_df, test_df
