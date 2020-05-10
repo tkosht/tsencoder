@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile.cpu
+      args:
+        user_name: $user_name
+        group_name: $group_name
+    image: ubuntu:tsencoder
+    container_name: tsencoder
+    tty: true
+    volumes:
+        - ./app:/home/$user_name/workspace
+    working_dir: /home/$user_name/workspace

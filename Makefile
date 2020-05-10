@@ -2,6 +2,14 @@ default: up
 
 all: run
 
+gpu:
+	@rm -f Dockerfile docker-compose.yml
+	@ln -s docker/docker-compose.gpu.yml docker-compose.yml
+
+cpu:
+	@rm -f Dockerfile docker-compose.yml
+	@ln -s docker/docker-compose.cpu.yml docker-compose.yml
+
 run: up
 	docker-compose exec app python enc.py
 
