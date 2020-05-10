@@ -15,3 +15,6 @@ services:
     volumes:
         - ./app:/home/$user_name/workspace
     working_dir: /home/$user_name/workspace
+    ports:
+      - "5000:5000"
+      - "6006:6006"

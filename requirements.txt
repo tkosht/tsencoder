@@ -9,6 +9,10 @@ matplotlib
 seaborn
 plotly
 
+# for experiment management
+mlflow
+tensorboard
+tensorboardX
 
 # for sqa
 pudb

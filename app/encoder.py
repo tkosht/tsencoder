@@ -1,6 +1,11 @@
 import pandas
 import torch
 import torch.nn as nn
+import argparse
+
+import mlflow
+import tempfile
+from tensorboardX import SummaryWriter
 
 
 def create_mask(n_rows, n_cols, offset=(0, 0), device=torch.device("cpu")):
@@ -59,12 +64,46 @@ class BatchIterator(object):
         return bch_src.to(device), bch_tgt.to(device)
 
 
+def log_scalar(name, value, step):
+    """Log a scalar value to both MLflow and TensorBoard"""
+    writer.add_scalar(name, value, step)
+    mlflow.log_metric(name, value)
+
+
+def get_args():
+    psr = argparse.ArgumentParser()
+    psr.add_argument("--predict-date", type=str, default="2016-01-01")
+    psr.add_argument("--epoch", type=int, default=100)
+    psr.add_argument("--window-size", type=int, default=17)
+    psr.add_argument("--batch-size", type=int, default=32)
+    psr.add_argument("--log-interval", type=int, default=10)
+    args = psr.parse_args()
+    return args
+
+
+def log_weights(model, step):
+    # writer.add_histogram("weights/transformer/weight", model.weight.data, step)
+    # model.encoder.layers[0].self_attn.out_proj.weight
+    for idx, layer in enumerate(model.encoder.layers):
+        attn = layer.self_attn.out_proj
+        writer.add_histogram(
+            f"weights/encoder/self_attn/{idx}/weight", attn.weight.data, step
+        )
+    for idx, layer in enumerate(model.decoder.layers):
+        attn = layer.self_attn.out_proj
+        writer.add_histogram(
+            f"weights/decoder/self_attn/{idx}/weight", attn.weight.data, step
+        )
+
+
 if __name__ == "__main__":
     import time
     from module.dataset.auckset import DatasetCyclicAuckland
 
+    args = get_args()
+
     # parameters
-    predict_date = "2016-01-01"
+    predict_date = args.predict_date
 
     # load data
     aucset = DatasetCyclicAuckland("data/data.tsv")
@@ -86,11 +125,21 @@ if __name__ == "__main__":
     df = df_train
 
     model.train()
-    max_epoch = 100
-    wsz = 17  # window size / bptt size
-    bsz = 32  # batch size
+
+    # max_epoch = 100
+    # wsz = 17  # window size / bptt size
+    # bsz = 32  # batch size
+    # log_interval = 10
+    max_epoch = args.epoch
+    wsz = args.window_size  # window size / bptt size
+    bsz = args.batch_size  # batch size
+    log_interval = args.log_interval
+
     total_loss = 0
-    log_interval = 10
+
+    output_dir = tempfile.mkdtemp()
+    writer = SummaryWriter(output_dir)
+    print("Writing TensorBoard events locally to %s\n" % output_dir)
 
     batch_creator = BatchIterator(df[aucset.data_coumns], bsz, wsz, device)
     start_time = time.time()
@@ -124,5 +173,13 @@ if __name__ == "__main__":
                     f"lr {lr:02.2f} | ms/batch {elapsed:5.2f} | "
                     f"loss {cur_loss:5.2f}"
                 )
+                step = epoch * bsz + idx
+                log_scalar("train_loss", total_loss, step)
+                log_weights(model, step)
+
                 total_loss = 0
                 start_time = time.time()
+
+    # Upload the TensorBoard event logs as a run artifact
+    print("Uploading TensorBoard events as a run artifact...")
+    mlflow.log_artifacts(output_dir, artifact_path="events")
