@@ -12,9 +12,10 @@ services:
     container_name: tsencoder
     tty: true
     volumes:
-      - ./app:/home/$user_name/workspace
+      - .:/home/$user_name/workspace
     working_dir: /home/$user_name/workspace
     ports:
-      - "5000:5000"
-      - "6006:6006"
+      - "4141:4141"   # kedro-viz
+      - "5000:5000"   # MLflow
+      - "6006:6006"   # tensorboard
 

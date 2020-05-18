@@ -1,6 +1,6 @@
 # for data science
 numpy
-pandas
+pandas<1.0
 sklearn
 scipy
 sympy
@@ -13,6 +13,10 @@ plotly
 mlflow
 tensorboard
 tensorboardX
+kedro
+kedro-viz
+python-dateutil==2.8.0
+
 
 # for sqa
 pudb

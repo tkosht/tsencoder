@@ -1,0 +1,5 @@
+output_dir: ./
+project_name: Time Series Encoder
+repo_name: kedro
+python_package: tsenc
+include_example: True

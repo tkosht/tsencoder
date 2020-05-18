@@ -5,16 +5,16 @@
 	],
 	"service": "app",
 	"workspaceFolder": "/home/dsuser/workspace",
-	"settings": { 
-        "terminal.integrated.shell.linux": "/bin/bash",
-        "python.pythonPath": "/usr/local/bin/python",
-        "python.linting.enabled": true,
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": false,
 		"python.linting.flake8Enabled": true,
-        "python.linting.pylintPath": "/usr/local/bin/pylint",
+		"python.linting.pylintPath": "/usr/local/bin/pylint",
 		"python.linting.flake8Path": "/usr/local/bin/flake8",
-		"python.linting.flake8Args": [ ],
-		"python.formatting.provider": "black",
+		"python.linting.flake8Args": [],
+		"python.formatting.provider": "/usr/local/bin/black",
 		"editor.formatOnSave": true,
 		"editor.formatOnPaste": false
 	},
@@ -23,6 +23,6 @@
 	// "shutdownAction": "none",
 	// "postCreateCommand": "apt-get update && apt-get install -y git",
 	"extensions": [
-        "ms-python.python"
-    ]
+		"ms-python.python"
+	]
 }

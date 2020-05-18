@@ -6,6 +6,8 @@ import argparse
 import mlflow
 import tempfile
 from tensorboardX import SummaryWriter
+import pickle
+import mlflow.pytorch
 
 
 def create_mask(n_rows, n_cols, offset=(0, 0), device=torch.device("cpu")):
@@ -82,8 +84,6 @@ def get_args():
 
 
 def log_weights(model, step):
-    # writer.add_histogram("weights/transformer/weight", model.weight.data, step)
-    # model.encoder.layers[0].self_attn.out_proj.weight
     for idx, layer in enumerate(model.encoder.layers):
         attn = layer.self_attn.out_proj
         writer.add_histogram(
@@ -183,3 +183,4 @@ if __name__ == "__main__":
     # Upload the TensorBoard event logs as a run artifact
     print("Uploading TensorBoard events as a run artifact...")
     mlflow.log_artifacts(output_dir, artifact_path="events")
+    mlflow.pytorch.log_model(model, "models", pickle_module=pickle)

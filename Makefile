@@ -2,6 +2,9 @@ default: up
 
 all: run
 
+bash: up
+	docker-compose exec app bash
+
 # switch mode
 gpu:
 	@rm -f Dockerfile docker-compose.yml
@@ -10,6 +13,12 @@ gpu:
 cpu:
 	@rm -f Dockerfile docker-compose.yml
 	@ln -s docker/docker-compose.cpu.yml docker-compose.yml
+
+kedro: up
+	docker-compose exec app kedro new --config kedro.yml
+
+kedro-viz: up
+	docker-compose exec --workdir=/home/dsuser/workspace/kedro app kedro viz --host=0.0.0.0
 
 # run tasks
 run: up
